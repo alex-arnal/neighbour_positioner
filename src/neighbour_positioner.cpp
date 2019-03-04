@@ -74,7 +74,8 @@ void NeighbourPositioner::readyState()
     }
     catch (tf2::LookupException error)
     {
-        RCOMPONENT_ERROR("Couldn't get the transform betwen fixed_frame and base_frame");
+        RCOMPONENT_ERROR_THROTTLE(2, "Couldn't get the transform betwen %s (fixed_frame) and %s (base_frame)",
+                                  fixed_frame_.c_str(), base_frame_.c_str());
     }
 
     if (((ros::Time::now() - last_tf_time_).toSec() > ros::Duration(2.0).toSec()) == false)
@@ -85,7 +86,8 @@ void NeighbourPositioner::readyState()
     }
     else
     {
-        RCOMPONENT_ERROR("Too much time without tf between base_frame and fixed_frame");
+        RCOMPONENT_ERROR_THROTTLE(2, "Too much time without tf between %s (fixed_frame) and %s (base_frame)",
+                                  fixed_frame_.c_str(), base_frame_.c_str());
     }
 
     // PUBLICATION OF THE NEIGHBOURS POSITIONS AS A PROHIBITION AREA
@@ -136,7 +138,7 @@ void NeighbourPositioner::readyState()
     }
     else
     {
-        RCOMPONENT_ERROR("Too much time without receiving neighbours postion");
+        RCOMPONENT_ERROR_THROTTLE(2, "Too much time without receiving neighbours postion");
     }
 
     ros::Duration(1 / desired_freq_).sleep();
