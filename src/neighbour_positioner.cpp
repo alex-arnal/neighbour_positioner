@@ -96,7 +96,7 @@ void NeighbourPositioner::readyState()
         double diff_y = current_neighbour_transform_.transform.translation.y -
                         last_neighbour_transform_.transform.translation.y;
         double dist = sqrt(diff_x * diff_x + diff_y * diff_y);
-        if (dist > 0.1)
+        if (dist > 0.05)
         {
             // TODO: SET THE FOOTPRINT OF THE OTHER ROBOT AS OBSTACLE
             // CREATE THE OBSTACLE
@@ -104,17 +104,26 @@ void NeighbourPositioner::readyState()
             geometry_msgs::Point point;
 
             double offset = 0.2;
+            double rotation = tf::getYaw(current_neighbour_transform_.transform.rotation);
             point.x = current_neighbour_transform_.transform.translation.x + offset;
-            point.y = current_neighbour_transform_.transform.translation.y + offset;
+            point.y = current_neighbour_transform_.transform.translation.y + offset / 5;
+            point.x = point.x * cos(rotation) - point.y * sin(rotation);
+            point.y = point.x * sin(rotation) + point.y * cos(rotation);
             vector_to_add.push_back(point);
             point.x = current_neighbour_transform_.transform.translation.x + offset;
-            point.y = current_neighbour_transform_.transform.translation.y - offset;
+            point.y = current_neighbour_transform_.transform.translation.y - offset / 5;
+            point.x = point.x * cos(rotation) - point.y * sin(rotation);
+            point.y = point.x * sin(rotation) + point.y * cos(rotation);
             vector_to_add.push_back(point);
             point.x = current_neighbour_transform_.transform.translation.x - offset;
             point.y = current_neighbour_transform_.transform.translation.y - offset;
+            point.x = point.x * cos(rotation) - point.y * sin(rotation);
+            point.y = point.x * sin(rotation) + point.y * cos(rotation);
             vector_to_add.push_back(point);
             point.x = current_neighbour_transform_.transform.translation.x - offset;
             point.y = current_neighbour_transform_.transform.translation.y + offset;
+            point.x = point.x * cos(rotation) - point.y * sin(rotation);
+            point.y = point.x * sin(rotation) + point.y * cos(rotation);
             vector_to_add.push_back(point);
 
             costmap_prohibition_layer::UpdateZones update_zones;
