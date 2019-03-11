@@ -1,18 +1,17 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="neighbours_topic" default="/neighbour_position_transform"/>
-    <arg name="local_position_topic" default="/position_transform"/>
+    <arg name="robot_name" default="rb1_base"/>
+    <arg name="neighbours_topic" default="/neighbourhood"/>
     <arg name="fixed_frame" default="map"/>
-    <arg name="base_frame" default="robot_1_basefootprint"/>
-    <arg name="prohibition_layer_srv" default="/move_base/global_costmap/costmap_prohibition_layer/update_zones"/>
-    <arg name="desired_freq" default="10"/>
-
+    <arg name="base_frame" default="rb1_base_a_base_footprint"/>
+    <arg name="prohibition_layer_srv" default="/rb1_base_a/move_base/global_costmap/costmap_prohibition_layer/update_zones"/>
+    <arg name="desired_freq" default="50"/>
 
     <node name="neighbour_positioner" pkg="neighbour_positioner" type="neighbour_positioner_node" output="screen">
+        <param name="robot_name" value="$(arg robot_name)"/>
         <param name="neighbours_topic" value="$(arg neighbours_topic)"/>
         <param name="fixed_frame" value="$(arg fixed_frame)"/>
         <param name="base_frame" value="$(arg base_frame)"/>
-        <param name="local_position_topic" value="$(arg local_position_topic)"/>
         <param name="prohibition_layer_srv" value="$(arg prohibition_layer_srv)"/>
         <param name="desired_freq" value="$(arg desired_freq)"/>
     </node>

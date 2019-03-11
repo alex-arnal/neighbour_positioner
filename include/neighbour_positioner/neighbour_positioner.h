@@ -10,6 +10,7 @@
 #include <tf/transform_listener.h>
 #include <tf/transform_datatypes.h>
 #include <costmap_prohibition_layer/UpdateZones.h>
+#include <neighbour_positioner/NeighbourLocation.h>
 
 class NeighbourPositioner : public rcomponent::RComponent
 {
@@ -45,24 +46,29 @@ protected:
   //! Private node hanlde, to read params and publish data
   ros::NodeHandle pnh_;
 
-  string local_position_topic_, neighbours_topic_;
+  string neighbours_topic_;
   ros::Publisher local_position_pub_;
   ros::Subscriber neighbours_sub_;
 
-  nav_msgs::Odometry last_odom_;
-
   tf::TransformListener tf_listener_;
-  tf::StampedTransform current_transform_, last_transform_;
+  tf::StampedTransform current_transform_;
 
   ros::Time last_tf_time_;
 
   string fixed_frame_, base_frame_;
+  string robot_name_;
 
   string prohibition_layer_srv_;
   ros::ServiceClient prohibition_layer_client_;
 
-  geometry_msgs::TransformStamped current_neighbour_transform_, last_neighbour_transform_;
-  ros::Time last_time_neighbour_;
+  typedef struct
+  {
+    geometry_msgs::TransformStamped current_location;
+    geometry_msgs::TransformStamped last_location;
+    ros::Time last_time;
+  } neighbour_info;
 
-  void neighboursCb(const geometry_msgs::TransformStamped::ConstPtr &msg);
+  std::map<string, neighbour_info> neighbourhood;
+
+  void neighboursCb(const neighbour_positioner::NeighbourLocation::ConstPtr &msg);
 };
